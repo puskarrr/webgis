@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Burundi Market Analytics Documentation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #CAE8BD;
+            color: #333;
+            line-height: 1.7;
+            padding: 40px;
+            max-width: 1000px;
+            margin: auto;
+        }
+        h1, h2 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 8px;
+            margin-top: 40px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 30px;
+        }
+        ul, ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+        .section {
+            margin-bottom: 50px;
+        }
+        .header {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 40px;
+            color: #2980b9;
+            font-weight: bold;
+        }
+        .divider {
+            border-top: 2px solid #ccc;
+            margin: 20px 0;
+        }
+        .highlight {
+            background-color: #ecf0f1;
+            padding: 10px;
+            border-left: 4px solid #3498db;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Documentation – Burundi Market Analytics</div>
+
+    <div class="section">
+        <h1>🧭 Objectives of Burundi Market Analytics</h1>
+        <p>The Burundi Market Analytics application is a browser-based geospatial platform designed to help users analyze the distribution and accessibility of markets across Burundi. The system leverages modern web mapping technologies to deliver a responsive and interactive interface where users can:</p>
+        <ol>
+            <li>Explore and switch between various base maps.</li>
+            <li>Identify nearby markets within a specified radius.</li>
+            <li>Calculate the service area coverage of different market sizes.</li>
+            <li>Determine the closest market from any selected location.</li>
+            <li>Compute the shortest route between two selected locations.</li>
+            <li>Visualize spatial data interactively without requiring specialized GIS software.</li>
+            <li>Access backend services that dynamically respond with spatial data fetched from a spatial database.</li>
+        </ol>
+        <p>This platform serves as both an educational and analytical tool for decision-makers, researchers, and students involved in geospatial analysis and market accessibility studies.</p>
+    </div>
+
+    <div class="section">
+        <h1>🖥 Front-End (Client-Side)</h1>
+        <h2>1. HTML (HyperText Markup Language)</h2>
+        <ul>
+            <li>A navigation bar that links to tools like base map switcher, market search, service area, closest market, and route finder.</li>
+            <li>Multiple “panel cards” that display tools/forms for user input and interaction.</li>
+            <li>An embedded map container (&lt;div id="map"&gt;) that serves as the canvas for <u>OpenLayers</u> visualization.</li>
+            <li>Standard HTML elements like form, input, button, label, and ul/li for UI interactions.</li>
+            <li>The page is responsive, accessible on both desktop and mobile devices, and loads the map automatically using onload="init()".</li>
+        </ul>
+
+        <h2>2. CSS (Cascading Style Sheets)</h2>
+        <p>Styling is done via:</p>
+        <ul>
+            <li><strong>Bootstrap 5.3.2</strong>: For responsive layout, forms, buttons, and alerts.</li>
+            <li><strong>Custom CSS (viewer.css)</strong>: For hover effects, card styling.</li>
+        </ul>
+
+        <h2>3. JavaScript (viewer.js)</h2>
+        <ul>
+            <li>Map initialization with zoom levels and extent.</li>
+            <li>Base map switching (OSM, ESRI, etc.).</li>
+            <li>Adding a custom base map after tiling images.</li>
+            <li>Coordinate selection via map clicks.</li>
+            <li>Buffer circle creation using slider.</li>
+            <li>AJAX requests to backend (CGI).</li>
+            <li>Dynamic feature rendering.</li>
+        </ul>
+
+        <h2>4. OpenLayers (ol.js)</h2>
+        <ul>
+            <li>Tile rendering, vector drawing, and event handling.</li>
+            <li>Feature styling using stroke, fill, and icons.</li>
+        </ul>
+
+        <h2>5. Bootstrap Framework</h2>
+        <ul>
+            <li>Responsive layout and grid system.</li>
+            <li>Navbar toggling, cards, and form elements.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h1>🧠 Functional Features</h1>
+
+        <h2>🔘 Base Layer Selection</h2>
+        <ul>
+            <li>OpenStreetMap</li>
+            <li>OpenTopoMap</li>
+            <li>ESRI World Topo Map</li>
+            <li>ESRI NatGeo Map</li>
+            <li>Own Tile Server</li>
+        </ul>
+
+        <h2>🧭 Market Search</h2>
+        <ul>
+            <li>User selects a location and radius.</li>
+            <li>Sends request to <code>search.py</code>.</li>
+            <li>Markets rendered based on category with icon size:
+                <ul>
+                    <li>Small: 15px</li>
+                    <li>Local: 20px</li>
+                    <li>Medium: 25px</li>
+                    <li>Capital: 40px</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>🧩 Service Area Identification</h2>
+        <ul>
+            <li>Triggered via <code>service_area.py</code>.</li>
+            <li>Returns polygons from PostGIS and renders on map.</li>
+        </ul>
+
+        <h2>🧮 Shortest Route Calculation</h2>
+        <ul>
+            <li>Select two points on map.</li>
+            <li>Request sent to <code>routing.py</code>.</li>
+            <li>Red line path is rendered.</li>
+        </ul>
+
+        <h2>📍 Closest Market Tool</h2>
+        <ul>
+            <li>Request to <code>closest_markets.py</code>.</li>
+            <li>Markets returned and rendered with icons.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h1>🖧 Back-End (Server-Side)</h1>
+
+        <h2>1. Python CGI Scripts</h2>
+        <ul>
+            <li>Handles inputs via <code>cgi.FieldStorage()</code>.</li>
+            <li>Connects to PostGIS using <code>psycopg2</code>.</li>
+            <li>Returns spatial results as GeoJSON.</li>
+        </ul>
+        <!-- <p><strong>Security Note:</strong> Validate inputs to avoid SQL injection.</p> -->
+
+        <h2>2. PostgreSQL/PostGIS Database</h2>
+        <ul>
+            <li>Rendering data stored in database.</li>
+            <li>Hosts spatial layers in schema <code>vector.bi_*</code>.</li>
+            <li>Indexed geometries for performance.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h1>🔁 Data Flow Overview</h1>
+        <ol>
+            <li>User clicks or fills form on map.</li>
+            <li>AJAX sends data to Python CGI.</li>
+            <li>CGI queries PostGIS and returns GeoJSON.</li>
+            <li>JavaScript renders features with OpenLayers.</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h1>⚠️ Limitations & Deployment Notes</h1>
+        <ul>
+            <li><strong>File Access Issues:</strong> Don't use <code>file://</code> — use HTTP server.</li>
+            <li><strong>Hosting:</strong> WAMP, XAMPP, or Python server recommended.</li>
+            <li><strong>Security:</strong> CGI scripts need sanitization and validation.</li>
+            <li><strong>Performance:</strong> Limit large vector datasets.</li>
+            <li><strong>Browser Support:</strong> Chrome, Firefox, and Edge are compatible.</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h1>🎯 Conclusion</h1>
+        <p><strong>Burundi Market Analytics</strong> is a complete, browser-based GIS tool for spatial market analysis. It integrates OpenLayers, Python CGI, and PostGIS to offer robust tools for route finding, service area coverage, and proximity search. With improved security and optimization, it can evolve into a production-level platform for development planning and market infrastructure monitoring.</p>
+    </div>
+</body>
+</html>
